@@ -12,11 +12,12 @@ import {
 } from 'lucide-react';
 
 const Account: React.FC = () => {
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [newsletter, setNewsletter] = useState(true);
+
 
   const mockUserData = {
     name: 'Mario Rossi',
@@ -49,8 +50,8 @@ const Account: React.FC = () => {
               <User className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-white">{mockUserData.name}</h1>
-              <p className="text-red-100">{mockUserData.email}</p>
+              <h1 className="text-2xl font-bold text-white">{user?.fullName}</h1>
+              <p className="text-red-100">{user?.email}</p>
             </div>
           </div>
         </div>

@@ -9,7 +9,7 @@ const Navigation: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const location = useLocation();
-  const { isAuthenticated, setIsAuthenticated } = useAuth();
+  const { isAuthenticated, setIsAuthenticated, user } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const profileRef = useRef<HTMLDivElement>(null);
 
@@ -50,6 +50,8 @@ const Navigation: React.FC = () => {
 
     return items;
   };
+
+  console.log({isAuthenticated});
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -174,9 +176,9 @@ const Navigation: React.FC = () => {
                   className="flex items-center space-x-2 hover:text-red-100 transition-colors px-3 py-1"
                 >
                   <div className="w-8 h-8 bg-red-700 rounded-full flex items-center justify-center">
-                    <span className="text-sm font-medium">J</span>
+                    <span className="text-sm font-medium">{user?.fullName?.slice(0, 1) || user?.email?.slice(0, 1)}</span>
                   </div>
-                  <span>John</span>
+                  <span>{user?.fullName}</span>
                   <ChevronDown className="h-4 w-4" />
                 </button>
 

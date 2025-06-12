@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { authService, User } from "../services/auth.service";
+import { authService } from "../services/auth.service";
+import { User } from "../types";
 
 interface AuthContextType {
   user: User | null;
@@ -32,6 +33,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const user = await authService.getCurrentUser();
       setUser(user);
+      setIsAuthenticated(true);
     } catch (error) {
       setUser(null);
     } finally {
@@ -64,8 +66,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const { user, error } = await authService.register(email, password, name);
       if (error) throw error;
-      setUser(user);
-      navigate("/diario");
+    //   setUser(user);
+      navigate("/login");
     } catch (error) {
       if (error instanceof Error) {
         throw new Error(error.message);

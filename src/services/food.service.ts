@@ -7,12 +7,11 @@ interface AuthResponseData {
   token: string;
 }
 
-export const authService = {
-  getCurrentUser: async (): Promise<User | null> => {
+export const foodService = {
+  getAllFoods: async (): Promise<User | null> => {
     try {
-      const { data } = await apiClient.get<APIResponse<User>>("/users/me");
-      const { token, user } = data.data;
-      return user || null;
+      const { data } = await apiClient.get<APIResponse<User>>("/foods/");
+      return data.data || null;
     } catch (error) {
       if (error instanceof APIError && error.status === 401) {
         return null;
@@ -20,10 +19,33 @@ export const authService = {
       throw handleAPIError(error);
     }
   },
-  
+  getSingleFood: async (id: string): Promise<User | null> => {
+    try {
+      const { data } = await apiClient.get<APIResponse<User>>(`/foods/${id}`);
+      const {food} = data.data;
+      return food || null;
+    } catch (error) {
+      if (error instanceof APIError && error.status === 401) {
+        return null;
+      }
+      throw handleAPIError(error);
+    }
+  },
+  getAllFoodCategories: async (): Promise<User | null> => {
+    try {
+      const { data } = await apiClient.get<APIResponse<User>>("/foods/categories");
+      return data.data || null;
+    } catch (error) {
+      if (error instanceof APIError && error.status === 401) {
+        return null;
+      }
+      throw handleAPIError(error);
+    }
+  },
+
   login: async (email: string, password: string): Promise<AuthResponse> => {
-      try {
-          const { data } = await apiClient.post<APIResponse<AuthResponseData>>(
+    try {
+      const { data } = await apiClient.post<APIResponse<AuthResponseData>>(
         "/auth/login",
         {
           email,
@@ -72,7 +94,7 @@ export const authService = {
       }
 
       const { token, user } = data.data;
-    //   localStorage.setItem("token", token);
+      localStorage.setItem("token", token);
 
       return { user, token };
     } catch (error) {

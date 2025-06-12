@@ -1,12 +1,38 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ArrowLeft, Share2, Facebook, Apple as WhatsApp, Copy, Check, Info, Scale, Flame, Cookie, ChevronRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import SearchBar from '../components/search/SearchBar';
+import { foodService } from '../services/food.service';
 
 const FoodDetail: React.FC = () => {
+    const {id} = useParams();
+  const [foodDetails, setFoodDetails] = useState(null);
   const [copied, setCopied] = useState(false);
-  const [grams, setGrams] = useState('100');
+  const [grams, setGrams] = useState(100);
   const caloriesPer100g = 45;
+
+
+    useEffect(() => {
+      getSingleFood(id as string);
+    }, [id]);
+
+    useEffect(() => {
+        if(foodDetails){
+setGrams(Math.round(((foodDetails?.nutritionPer100g?.calories as number) * 100) / caloriesPer100g))
+        }
+    }, [foodDetails]);
+  
+    async function getSingleFood(id:string) {
+      try {
+        const foodResult = await foodService.getSingleFood(id);
+        // setUser(user);
+        setFoodDetails(foodResult);
+      } catch (error) {
+        // setUser(null);
+      } finally {
+        // setLoading(false);
+      }
+    }
 
   const calculateCalories = () => {
     const weight = parseFloat(grams);
@@ -103,8 +129,8 @@ const FoodDetail: React.FC = () => {
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
         <div className="p-6">
           {/* Header */}
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Mela</h1>
-          <p className="text-gray-600 dark:text-gray-400 mb-8">Frutta fresca</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">{foodDetails?.name}</h1>
+          <p className="text-gray-600 dark:text-gray-400 mb-8">{foodDetails?.brand}</p>
 
           {/* Calorie Calculator */}
           <div className="bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-900/10 dark:to-orange-900/10 rounded-2xl p-4 md:p-8 mb-8">
@@ -161,7 +187,7 @@ const FoodDetail: React.FC = () => {
                 <Cookie className="h-5 w-5 text-yellow-500" />
                 <span className="text-sm text-gray-600 dark:text-gray-400">Carboidrati</span>
               </div>
-              <div className="text-xl font-bold text-yellow-500">{nutritionData.carbs}g</div>
+              <div className="text-xl font-bold text-yellow-500">{foodDetails?.nutritionPer100g?.macros?.carbs}g</div>
             </div>
             
             <div className="bg-green-50 dark:bg-green-900/10 p-4 rounded-lg text-center">
@@ -169,7 +195,7 @@ const FoodDetail: React.FC = () => {
                 <Scale className="h-5 w-5 text-green-500" />
                 <span className="text-sm text-gray-600 dark:text-gray-400">Proteine</span>
               </div>
-              <div className="text-xl font-bold text-green-500">{nutritionData.protein}g</div>
+              <div className="text-xl font-bold text-green-500">{foodDetails?.nutritionPer100g?.macros?.protein}g</div>
             </div>
             
             <div className="bg-blue-50 dark:bg-blue-900/10 p-4 rounded-lg text-center">
@@ -177,7 +203,7 @@ const FoodDetail: React.FC = () => {
                 <Info className="h-5 w-5 text-blue-500" />
                 <span className="text-sm text-gray-600 dark:text-gray-400">Grassi</span>
               </div>
-              <div className="text-xl font-bold text-blue-500">{nutritionData.fat}g</div>
+              <div className="text-xl font-bold text-blue-500">{foodDetails?.nutritionPer100g?.macros?.fat}g</div>
             </div>
           </div>
 
@@ -190,12 +216,12 @@ const FoodDetail: React.FC = () => {
             <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
               <div className="flex justify-between items-center mb-2">
                 <span className="text-gray-600 dark:text-gray-300">Fibre</span>
-                <span className="font-medium">{nutritionData.fiber}g</span>
+                <span className="font-medium">{foodDetails?.nutritionPer100g?.macros?.fiber}g</span>
               </div>
               <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
                 <div
                   className="bg-purple-500 h-2 rounded-full"
-                  style={{ width: `${(nutritionData.fiber / 25) * 100}%` }}
+                  style={{ width: `${(foodDetails?.nutritionPer100g?.macros?.fiber / 25) * 100}%` }}
                 />
               </div>
             </div>
@@ -203,18 +229,18 @@ const FoodDetail: React.FC = () => {
             <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
               <div className="flex justify-between items-center mb-2">
                 <span className="text-gray-600 dark:text-gray-300">Zuccheri</span>
-                <span className="font-medium">{nutritionData.sugar}g</span>
+                <span className="font-medium">{foodDetails?.nutritionPer100g?.sugarContent}g</span>
               </div>
               <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
                 <div
                   className="bg-pink-500 h-2 rounded-full"
-                  style={{ width: `${(nutritionData.sugar / 25) * 100}%` }}
+                  style={{ width: `${(foodDetails?.nutritionPer100g?.sugarContent / 25) * 100}%` }}
                 />
               </div>
             </div>
 
             {/* Vitamins */}
-            {Object.entries(nutritionData.vitamins).map(([vitamin, value]) => (
+            {Object.entries(foodDetails?.nutritionPer100g?.micronutrients || {}).map(([vitamin, value]) => (
               <div key={vitamin} className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-gray-600 dark:text-gray-300">Vitamina {vitamin}</span>
