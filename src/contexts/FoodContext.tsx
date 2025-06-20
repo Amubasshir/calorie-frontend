@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Food, SearchHistory } from '../types';
 import { mockFoodData } from '../utils/mockData';
+import { foodService } from '../services/food.service';
 
 interface FoodContextType {
   foods: Food[];
@@ -28,16 +29,25 @@ export const FoodProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
   }, [searchHistory]);
 
-  const searchFood = (query: string) => {
+  const searchFood = async (query: string) => {
     if (!query.trim()) {
       setSearchResults([]);
       return;
     }
+
+    try {
+        const results = await foodService.getAllFoods({query});
+        if(results){
+            setSearchResults(results);
+        }
+    } catch (error) {
+        console.log(error);
+    }
     
-    const results = foods.filter(food => 
-      food.name.toLowerCase().includes(query.toLowerCase())
-    );
-    setSearchResults(results);
+    // const results = foods.filter(food => 
+    //   food.name.toLowerCase().includes(query.toLowerCase())
+    // );
+    // setSearchResults(results);
   };
 
   const addToHistory = (query: string) => {

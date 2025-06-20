@@ -7,41 +7,23 @@ interface AuthResponseData {
   token: string;
 }
 
-export const foodService = {
-    getAllFoods: async (params: GetAllFoodsParams = {}): Promise<User | null> => {
-  try {
-    const searchParams = new URLSearchParams();
-
-    Object.entries(params).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        searchParams.append(key, String(value));
+export const subscriptionService = {
+  getPlans: async (): Promise<[object]> => {
+    try {
+      const { data } = await apiClient.get(`/subscription/plans`);
+      return data?.data?.plans || null;
+    } catch (error) {
+      if (error instanceof APIError && error.status === 401) {
+        return null;
       }
-    });
-
-    const { data } = await apiClient.get<APIResponse<User>>(`/foods/?${searchParams.toString()}`);
-    return data?.data?.foods || null;
-  } catch (error) {
-    if (error instanceof APIError && error.status === 401) {
-      return null;
+      throw handleAPIError(error);
     }
-    throw handleAPIError(error);
-  }
-},
-//   getAllFoods: async (): Promise<User | null> => {
-//     try {
-//       const { data } = await apiClient.get<APIResponse<User>>("/foods/");
-//       return data.data || null;
-//     } catch (error) {
-//       if (error instanceof APIError && error.status === 401) {
-//         return null;
-//       }
-//       throw handleAPIError(error);
-//     }
-//   },
+  },
+  
   getSingleFood: async (id: string): Promise<User | null> => {
     try {
       const { data } = await apiClient.get<APIResponse<User>>(`/foods/${id}`);
-      const {food} = data.data;
+      const { food } = data.data;
       return food || null;
     } catch (error) {
       if (error instanceof APIError && error.status === 401) {
@@ -50,32 +32,18 @@ export const foodService = {
       throw handleAPIError(error);
     }
   },
-  getAllFoodCategories: async (): Promise<User | null> => {
-    try {
-      const { data } = await apiClient.get<APIResponse<User>>("/foods/categories");
-      return data.data || null;
-    } catch (error) {
-      if (error instanceof APIError && error.status === 401) {
-        return null;
-      }
-      throw handleAPIError(error);
-    }
-  },
 
-  login: async (email: string, password: string): Promise<AuthResponse> => {
+
+  checkout: async (planCode: string): Promise<object> => {
     try {
       const { data } = await apiClient.post<APIResponse<AuthResponseData>>(
-        "/auth/login",
+        "/subscription/checkout",
         {
-          email,
-          password,
+          planCode
         }
       );
 
-
-
-
-      console.log("✅✅✅", data)
+      console.log("✅✅✅", data);
 
       if (!data.data) {
         throw new APIError("Login failed: No data received");
@@ -96,8 +64,8 @@ export const foodService = {
     name: string
   ): Promise<AuthResponse> => {
     try {
-        // const result = await apiClient.post<APIResponse<AuthResponseData>>(
-        const { data } = await apiClient.post<APIResponse<AuthResponseData>>(
+      // const result = await apiClient.post<APIResponse<AuthResponseData>>(
+      const { data } = await apiClient.post<APIResponse<AuthResponseData>>(
         "/auth/register",
         {
           email,
@@ -105,8 +73,6 @@ export const foodService = {
           fullName: name,
         }
       );
-
-     
 
       if (!data.data) {
         throw new APIError("Registration failed: No data received");

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { AlertCircle, Loader2 } from 'lucide-react';
 import { Food } from '../../types';
 import { mockFoodData } from '../../utils/mockData';
+import { dataURLtoFile } from '../../utils/dataURLToFile';
+import { imageAnalysisService } from '../../services/imageAnalysis.service';
 
 interface FoodRecognitionProps {
   imageSrc: string;
@@ -20,41 +22,57 @@ const FoodRecognition: React.FC<FoodRecognitionProps> = ({
   
   // Simulate AI food recognition process
   useEffect(() => {
-    const analyzeFood = async () => {
-      try {
-        // This is where you would normally call an actual food recognition API
-        // For now, we'll just simulate it with a timeout and mock data
-        await new Promise(resolve => setTimeout(resolve, 2500));
-        
-        // Randomly select 1-3 food items from our mock database
-        const numberOfItems = Math.floor(Math.random() * 3) + 1;
-        const selectedFoods: Food[] = [];
-        
-        const availableFoods = [...mockFoodData];
-        
-        for (let i = 0; i < numberOfItems; i++) {
-          if (availableFoods.length === 0) break;
-          
-          const randomIndex = Math.floor(Math.random() * availableFoods.length);
-          selectedFoods.push(availableFoods[randomIndex]);
-          availableFoods.splice(randomIndex, 1);
+    const file = dataURLtoFile(imageSrc as string);
+    console.log({file, imageSrc});
+      const analyzedFood = async () => {
+    const formData = new FormData();
+    formData.append('image', file);
+        try {
+            const result = await imageAnalysisService.analysisImage(formData)
+console.log("i am from image", {result});
+        } catch (error) {
+            console.log({error});
         }
-        
-        setRecognizedFoods(selectedFoods);
-        setIsAnalyzing(false);
-        
-        // Only fire the callback if we found foods
-        if (selectedFoods.length > 0) {
-          onFoodRecognized(selectedFoods);
-        }
-      } catch (err) {
-        console.error('Error analyzing food:', err);
-        setError('Failed to analyze food image. Please try again.');
-        setIsAnalyzing(false);
       }
-    };
+
+      analyzedFood();
+
+
+    // const analyzeFood = async () => {
+    //   try {
+    //     // This is where you would normally call an actual food recognition API
+    //     // For now, we'll just simulate it with a timeout and mock data
+    //     await new Promise(resolve => setTimeout(resolve, 2500));
+        
+    //     // Randomly select 1-3 food items from our mock database
+    //     const numberOfItems = Math.floor(Math.random() * 3) + 1;
+    //     const selectedFoods: Food[] = [];
+        
+    //     const availableFoods = [...mockFoodData];
+        
+    //     for (let i = 0; i < numberOfItems; i++) {
+    //       if (availableFoods.length === 0) break;
+          
+    //       const randomIndex = Math.floor(Math.random() * availableFoods.length);
+    //       selectedFoods.push(availableFoods[randomIndex]);
+    //       availableFoods.splice(randomIndex, 1);
+    //     }
+        
+    //     setRecognizedFoods(selectedFoods);
+    //     setIsAnalyzing(false);
+        
+    //     // Only fire the callback if we found foods
+    //     if (selectedFoods.length > 0) {
+    //       onFoodRecognized(selectedFoods);
+    //     }
+    //   } catch (err) {
+    //     console.error('Error analyzing food:', err);
+    //     setError('Failed to analyze food image. Please try again.');
+    //     setIsAnalyzing(false);
+    //   }
+    // };
     
-    analyzeFood();
+    // analyzeFood();
   }, [imageSrc, onFoodRecognized]);
   
   return (

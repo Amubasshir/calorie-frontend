@@ -7,75 +7,19 @@ interface AuthResponseData {
   token: string;
 }
 
-export const foodService = {
-    getAllFoods: async (params: GetAllFoodsParams = {}): Promise<User | null> => {
-  try {
-    const searchParams = new URLSearchParams();
+export const imageAnalysisService = {
 
-    Object.entries(params).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        searchParams.append(key, String(value));
-      }
-    });
 
-    const { data } = await apiClient.get<APIResponse<User>>(`/foods/?${searchParams.toString()}`);
-    return data?.data?.foods || null;
-  } catch (error) {
-    if (error instanceof APIError && error.status === 401) {
-      return null;
-    }
-    throw handleAPIError(error);
-  }
-},
-//   getAllFoods: async (): Promise<User | null> => {
-//     try {
-//       const { data } = await apiClient.get<APIResponse<User>>("/foods/");
-//       return data.data || null;
-//     } catch (error) {
-//       if (error instanceof APIError && error.status === 401) {
-//         return null;
-//       }
-//       throw handleAPIError(error);
-//     }
-//   },
-  getSingleFood: async (id: string): Promise<User | null> => {
-    try {
-      const { data } = await apiClient.get<APIResponse<User>>(`/foods/${id}`);
-      const {food} = data.data;
-      return food || null;
-    } catch (error) {
-      if (error instanceof APIError && error.status === 401) {
-        return null;
-      }
-      throw handleAPIError(error);
-    }
-  },
-  getAllFoodCategories: async (): Promise<User | null> => {
-    try {
-      const { data } = await apiClient.get<APIResponse<User>>("/foods/categories");
-      return data.data || null;
-    } catch (error) {
-      if (error instanceof APIError && error.status === 401) {
-        return null;
-      }
-      throw handleAPIError(error);
-    }
-  },
-
-  login: async (email: string, password: string): Promise<AuthResponse> => {
+  analysisImage: async (formData: FormData): Promise<object> => {
     try {
       const { data } = await apiClient.post<APIResponse<AuthResponseData>>(
-        "/auth/login",
+        "/vision/analyze",
         {
-          email,
-          password,
+          file: formData
         }
       );
 
-
-
-
-      console.log("✅✅✅", data)
+      console.log("✅✅✅", data);
 
       if (!data.data) {
         throw new APIError("Login failed: No data received");
@@ -96,8 +40,8 @@ export const foodService = {
     name: string
   ): Promise<AuthResponse> => {
     try {
-        // const result = await apiClient.post<APIResponse<AuthResponseData>>(
-        const { data } = await apiClient.post<APIResponse<AuthResponseData>>(
+      // const result = await apiClient.post<APIResponse<AuthResponseData>>(
+      const { data } = await apiClient.post<APIResponse<AuthResponseData>>(
         "/auth/register",
         {
           email,
@@ -105,8 +49,6 @@ export const foodService = {
           fullName: name,
         }
       );
-
-     
 
       if (!data.data) {
         throw new APIError("Registration failed: No data received");

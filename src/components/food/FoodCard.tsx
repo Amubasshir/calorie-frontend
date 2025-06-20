@@ -7,7 +7,9 @@ interface FoodCardProps {
   onClick: () => void;
 }
 
+
 const FoodCard: React.FC<FoodCardProps> = ({ food, onClick }) => {
+    console.log({food});
   return (
     <div 
       className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300"
@@ -15,12 +17,12 @@ const FoodCard: React.FC<FoodCardProps> = ({ food, onClick }) => {
     >
       <div className="relative h-40 bg-gray-200 dark:bg-gray-700">
         <img 
-          src={food.image} 
-          alt={food.name}
+          src={food?.imageUrls[0]} 
+          alt={food?.name}
           className="w-full h-full object-cover"
         />
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
-          <h3 className="text-white font-medium">{food.name}</h3>
+          <h3 className="text-white font-medium">{food?.name}</h3>
         </div>
       </div>
       
@@ -28,26 +30,26 @@ const FoodCard: React.FC<FoodCardProps> = ({ food, onClick }) => {
         <div className="flex justify-between mb-2">
           <div>
             <span className="text-sm text-gray-500 dark:text-gray-400">Calories</span>
-            <p className="font-semibold text-green-600 dark:text-green-400">{food.calories} cal</p>
+            <p className="font-semibold text-green-600 dark:text-green-400">{food?.nutritionPer100g?.calories} cal</p>
           </div>
           <div>
             <span className="text-sm text-gray-500 dark:text-gray-400">Serving</span>
-            <p className="font-medium text-gray-900 dark:text-gray-200">{food.serving}</p>
+            <p className="font-medium text-gray-900 dark:text-gray-200">{food?.commonPortions[0]?.weightInGrams}g</p>
           </div>
         </div>
         
         <div className="grid grid-cols-3 gap-2 mb-4">
           <div className="bg-gray-100 dark:bg-gray-700 p-2 rounded text-center">
             <span className="text-xs text-gray-500 dark:text-gray-400">Protein</span>
-            <p className="font-medium text-gray-900 dark:text-gray-200">{food.protein}g</p>
+            <p className="font-medium text-gray-900 dark:text-gray-200">{food?.nutritionPer100g?.macros?.protein}g</p>
           </div>
           <div className="bg-gray-100 dark:bg-gray-700 p-2 rounded text-center">
             <span className="text-xs text-gray-500 dark:text-gray-400">Carbs</span>
-            <p className="font-medium text-gray-900 dark:text-gray-200">{food.carbs}g</p>
+            <p className="font-medium text-gray-900 dark:text-gray-200">{food?.nutritionPer100g?.macros?.carbs}g</p>
           </div>
           <div className="bg-gray-100 dark:bg-gray-700 p-2 rounded text-center">
             <span className="text-xs text-gray-500 dark:text-gray-400">Fat</span>
-            <p className="font-medium text-gray-900 dark:text-gray-200">{food.fat}g</p>
+            <p className="font-medium text-gray-900 dark:text-gray-200">{food?.nutritionPer100g?.macros?.fat}g</p>
           </div>
         </div>
         

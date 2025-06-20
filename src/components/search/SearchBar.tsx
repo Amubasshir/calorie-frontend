@@ -31,6 +31,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onCameraClick }) => {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (query.trim()) {
+        console.log(query);
       searchFood(query);
       addToHistory(query);
       setShowHistory(false);

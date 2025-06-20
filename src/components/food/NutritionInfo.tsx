@@ -20,13 +20,13 @@ const NutritionInfo: React.FC<NutritionInfoProps> = ({ food, onClose }) => {
   
   // Calculate nutrition based on quantity
   const calculatedNutrition = {
-    calories: Math.round(food.calories * quantity),
-    protein: Math.round(food.protein * quantity * 10) / 10,
-    carbs: Math.round(food.carbs * quantity * 10) / 10,
-    fat: Math.round(food.fat * quantity * 10) / 10,
-    sugar: Math.round((food.sugar || 0) * quantity * 10) / 10,
-    fiber: Math.round((food.fiber || 0) * quantity * 10) / 10,
-    sodium: Math.round((food.sodium || 0) * quantity)
+    calories: Math.round(food?.nutritionPer100g.calories * quantity),
+    protein: Math.round(food?.nutritionPer100g?.macros?.protein * quantity * 10) / 10,
+    carbs: Math.round(food?.nutritionPer100g?.macros?.carbs * quantity * 10) / 10,
+    fat: Math.round(food?.nutritionPer100g?.macros?.fat * quantity * 10) / 10,
+    sugar: Math.round((food?.nutritionPer100g?.sugarContent || 0) * quantity * 10) / 10,
+    fiber: Math.round((food?.nutritionPer100g?.macros?.fiber || 0) * quantity * 10) / 10,
+    sodium: Math.round((food?.nutritionPer100g?.micronutrients?.sodium || 0) * quantity)
   };
   
   return (
@@ -34,7 +34,7 @@ const NutritionInfo: React.FC<NutritionInfoProps> = ({ food, onClose }) => {
       <div className="bg-white dark:bg-gray-800 rounded-xl w-full max-w-md max-h-[90vh] overflow-auto">
         <div className="relative">
           <img 
-            src={food.image} 
+            src={food?.imageUrls[0]} 
             alt={food.name}
             className="w-full h-48 object-cover rounded-t-xl"
           />

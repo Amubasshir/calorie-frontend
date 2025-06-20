@@ -22,6 +22,8 @@ const Home: React.FC = () => {
     setShowCamera(false);
     setCapturedImage(null);
   };
+
+  console.log({capturedImage});
   
   const handleImageCapture = (imageSrc: string) => {
     setCapturedImage(imageSrc);

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Camera, Check, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { subscriptionService } from '../services/subscription.service';
 
 const Pricing: React.FC = () => {
   const features = [
@@ -9,6 +10,17 @@ const Pricing: React.FC = () => {
     'Diario alimentare personalizzato',
     'Statistiche dettagliate'
   ];
+
+  const handleProceed = async () => {
+    try {
+        const result = await subscriptionService.checkout("PIANO_PREMIUM");
+        console.log(result);
+    } catch (error) {
+        console.log(error);
+    }
+    // Implement your logic for proceeding with the premium plan
+    console.log('Proceeding to premium plan');
+  };
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
@@ -33,12 +45,13 @@ const Pricing: React.FC = () => {
             €5.99
             <span className="text-lg font-normal text-white/80">/mese</span>
           </div>
-          <Link
-            to="/register"
+          <button
+            // to="/register"
+            onClick={handleProceed}
             className="block w-full bg-white text-red-600 py-3 px-6 rounded-lg font-medium hover:bg-red-50 transition-colors duration-300"
           >
             Inizia ora
-          </Link>
+          </button>
         </div>
 
         <div className="p-8">

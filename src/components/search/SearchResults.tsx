@@ -18,7 +18,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({ results, onSelectFood }) 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {results.map((food) => (
           <FoodCard 
-            key={food.id} 
+            key={food?._id} 
             food={food} 
             onClick={() => onSelectFood(food)} 
           />

@@ -16,6 +16,20 @@ export interface Food {
   image: string;
 }
 
+export interface GetAllFoodsParams {
+  query?: string;
+  page?: number;
+  limit?: number;
+  sortBy?: string;
+  order?: 'asc' | 'desc';
+  category?: string;
+  minCalories?: number;
+  maxCalories?: number;
+  minProtein?: number;
+  maxProtein?: number;
+}
+
+
 export interface SearchHistory {
   query: string;
   timestamp: number;
