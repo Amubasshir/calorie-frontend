@@ -22,13 +22,15 @@ const FoodRecognition: React.FC<FoodRecognitionProps> = ({
   
   // Simulate AI food recognition process
   useEffect(() => {
-    const file = dataURLtoFile(imageSrc as string);
-    console.log({file, imageSrc});
       const analyzedFood = async () => {
-    const formData = new FormData();
-    formData.append('image', file);
         try {
-            const result = await imageAnalysisService.analysisImage(formData)
+            const result = await imageAnalysisService.analysisImage(imageSrc);
+            console.log({result});
+            if(result.status === 200){
+                setRecognizedFoods(result.data.data);
+                onFoodRecognized(result.data.data);
+                setIsAnalyzing(false);
+            }
 console.log("i am from image", {result});
         } catch (error) {
             console.log({error});

@@ -21,6 +21,8 @@ import FoodDetail from './pages/FoodDetail';
 import CoffeeDetail from './pages/CoffeeDetail';
 import Pricing from './pages/Pricing';
 import Account from './pages/Account';
+import SubscriptionSuccess from './pages/SubscriptionSuccess';
+import SubscriptionFailed from './pages/SubscriptionFailed';
 
 function App() {
   return (
@@ -45,6 +47,8 @@ function App() {
                 <Route path="/diario" element={<FoodDiary />} />
                 <Route path="/pricing" element={<Pricing />} />
                 <Route path="/account" element={<Account />} />
+                <Route path="/subscription/success" element={<SubscriptionSuccess />} />
+                <Route path="/subscription/failed" element={<SubscriptionFailed />} />
               </Routes>
             </Layout>
           </FoodProvider>

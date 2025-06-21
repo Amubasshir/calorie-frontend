@@ -14,6 +14,10 @@ const Pricing: React.FC = () => {
   const handleProceed = async () => {
     try {
         const result = await subscriptionService.checkout("PIANO_PREMIUM");
+           console.log("✅✅✅", result);
+        if(result?.status === 200){
+            window.open(result?.data?.url, "_blank");
+        }
         console.log(result);
     } catch (error) {
         console.log(error);

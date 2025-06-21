@@ -36,23 +36,16 @@ export const subscriptionService = {
 
   checkout: async (planCode: string): Promise<object> => {
     try {
-      const { data } = await apiClient.post<APIResponse<AuthResponseData>>(
+      const data = await apiClient.post<APIResponse<AuthResponseData>>(
         "/subscription/checkout",
         {
           planCode
         }
       );
 
-      console.log("✅✅✅", data);
-
-      if (!data.data) {
-        throw new APIError("Login failed: No data received");
-      }
-
-      const { token, user } = data.data;
-      localStorage.setItem("token", token);
-
-      return { user, token };
+   
+   
+      return data;
     } catch (error) {
       throw handleAPIError(error);
     }

@@ -10,25 +10,26 @@ interface AuthResponseData {
 export const imageAnalysisService = {
 
 
-  analysisImage: async (formData: FormData): Promise<object> => {
+  analysisImage: async (file: string): Promise<object> => {
     try {
-      const { data } = await apiClient.post<APIResponse<AuthResponseData>>(
+      const data = await apiClient.post<APIResponse<AuthResponseData>>(
         "/vision/analyze",
         {
-          file: formData
+          file
         }
       );
 
-      console.log("✅✅✅", data);
+    //   console.log("✅✅✅", data);
 
-      if (!data.data) {
-        throw new APIError("Login failed: No data received");
-      }
+    //   if (!data.data) {
+    //     throw new APIError("Login failed: No data received");
+    //   }
 
-      const { token, user } = data.data;
-      localStorage.setItem("token", token);
+    //   const { token, user } = data.data;
+    //   localStorage.setItem("token", token);
 
-      return { user, token };
+    //   return { user, token };
+      return data;
     } catch (error) {
       throw handleAPIError(error);
     }
