@@ -7,7 +7,7 @@ interface AuthResponseData {
   token: string;
 }
 
-export const subscriptionService = {
+export const dairyService = {
   getPlans: async (): Promise<[object]> => {
     try {
       const { data } = await apiClient.get(`/subscription/plans`);
